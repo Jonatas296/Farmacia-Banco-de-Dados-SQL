@@ -1,0 +1,130 @@
+/* Lógico_2: */
+create database FarmaciaDenises;
+CREATE TABLE Balconista (
+    id_balconista int PRIMARY KEY auto_increment,
+    nome VARCHAR(100),
+    endereco VARCHAR(200),
+    telefone char(11),
+    salario float
+);
+
+CREATE TABLE Categoria (
+    id_categoria int PRIMARY KEY auto_increment,
+    nome VARCHAR(100)
+);
+
+CREATE TABLE Receita (
+    id_receita int PRIMARY KEY auto_increment,
+    nome_medicamento VARCHAR(100),
+    descricao VARCHAR(300),
+    data_prescricao date,
+    nome_paciente VARCHAR(100),
+    crm_or_crf char(18)
+);
+
+CREATE TABLE Produto (
+    id_produto  int PRIMARY KEY auto_increment,
+    nome VARCHAR(100),
+    preco float,
+    validade VARCHAR(19),
+    descricao varchar(300),
+    quantidade float,
+    id_categoria int,
+    id_receita int,
+    constraint fk_categoria_p foreign key (id_categoria) references categoria (id_categoria) on delete set null on update cascade,
+    constraint fk_receita_p foreign key (id_receita) references receita (id_receita) on delete set null on update cascade
+);
+
+CREATE TABLE Item (
+    id_item int PRIMARY KEY auto_increment,
+    quantidade int
+);
+
+CREATE TABLE Cliente (
+    id_cliente int PRIMARY KEY auto_increment,
+    nome VARCHAR (100),
+    endereco VARCHAR(200),
+    telefone char(11),
+    cpf char(11),
+    data_nascimento date
+);
+
+CREATE TABLE Venda (
+    id_venda int PRIMARY KEY auto_increment,
+    data_da_venda date,
+    id_balconista int,
+    id_cliente int,
+    id_item int,
+    constraint fk_balconista_v foreign key (id_balconista) references balconista (id_balconista) on delete set null on update cascade,
+    constraint fk_cliente_v foreign key (id_cliente) references cliente (id_cliente) on delete set null on update cascade,
+    constraint fk_item_v foreign key (id_item) references item (id_item) on delete set null on update cascade
+);
+
+CREATE TABLE Fornecedor (
+    id_fornecedor int PRIMARY KEY auto_increment,
+	cnpj char(15),
+    nome VARCHAR(100),
+    telefone char(11),
+    endereco VARCHAR(200)
+);
+
+CREATE TABLE Produto_Fornecedor (
+    id_produto int,
+    id_fornecedor int,
+    constraint fk_produto_pf foreign key (id_produto) references produto (id_produto) on update cascade,
+    constraint fk_fornecedor foreign key (id_fornecedor) references fornecedor (id_fornecedor) on update cascade,
+    PRIMARY KEY (id_produto, id_fornecedor)
+);
+
+insert into balconista (id_balconista, nome, endereco, telefone, salario) values (1, 'João Silva', 'Rua das Flores, 123', 
+'88987654321', 1412.00), (2, 'Maria Santos', 'Av. Central, 456', '88912345678', 1412.00), (3, 'Carlos Oliveira', 
+'Rua do Sol, 789', '88998765432', 1412.00), (4, 'Ana Souza', 'Praça da Liberdade, 101', '88987650987', 1412.00);
+
+insert into categoria (id_categoria, nome) values (1, 'Farmaceuticos'), (2, 'Cosméticos'), (3, 'Acessórios'),
+(4, 'Alimenticios'), (5, 'Vitaminas e Suplementos'), (6, 'Higiene Pessoal'), (7, 'Artigos para bebes'), (8, 'Outros');
+
+insert into cliente (id_cliente, nome, endereco, telefone, cpf, data_nascimento) values (1, 'Jose Pereira Lima', 'Rua dos Amores, 120, Cedro', 
+'88968213117', '04452869709', '2001-10-04'), (2, 'Carla Nunes Santiago', 'Rua Ilidio Sampaio, 140, Cedro', '88994598986', '89765925864', '1997-08-15'), (3, 
+'Lucas da Silva Filho', 'Al Jose Quitino, 120, Cedro', '88959075092', '69845877498', '1985-04-22'), (4, 'Ana Maria Silva Caetano', 'Rua Castelo Branco, 
+200, Cedro', '88930498239', '85969742565', '1999-01-06'), (5, 'Andre Casimiro da Silva', 'Avenida Dr.Ricardo, 97, Cedro', '88924260500', '65489752841', '1988-07-16'), 
+(6, 'Amanda Correia Lima', 'Travessa Padre Cicero, 302, Cedro', '88964363701', '26878541258', '2002-11-20');
+
+insert into fornecedor (id_fornecedor, cnpj, nome, telefone, endereco) values (1, '15478549658754', 'CEQUIQ REMEDIOS LTDA', '88987994321', 'Rua Pedro 
+Samuel, 292, Fortaleza'), (2, '45698745987456', 'Laboratorio SLA', '88987674871', 'Avenida Dr.Samuel Sampaio, 1293, Fortaleza'), 
+(3, '78594875629875', 'NATURA', '88877659321', 'Travessa São Miguel, 2929, Juazeiro do Norte'), (4, '15341558974589', 'Johnson & Johnson', '88987658521', 
+'Av Boa Vista, 202, Iguatu'), (5, '75984569874215', 'Integral Medica', '88787654321', 'Rua Tuncas, 1010, Fortaleza'), (6, '85697511985575', 'YSY 
+Acessorios', '88987658378', 'Al Joao Candido, 3030, Fortaleza');
+
+insert into item (id_item, quantidade) values (1, 4), (2, 3.5), (3, 5), (4, 1.5), (5, 6);
+
+insert into receita (id_receita, nome_medicamento, descricao, data_prescricao, nome_paciente, crm_or_crf) values (1, 'Invermectina', 'Tomar a cada
+seis horas por 15 dias', '2024-11-03', 'José Carvalho de Lima', '7859462654869848'), (2, 'Metronidazol', 'Tomar de dois em dois dias por 20 dias', 
+'2024-10-25', 'Maria Angelica Pereira', '4859415648869848'); 
+
+insert into produto (id_produto, nome, preco, validade, descricao, quantidade, id_categoria, id_receita) values (1, 'Dipirona Monoidratado', 12.50, 
+'2025-08-14', 'Recomendados para febre e dor de cabeça', 20.00, 1, null), (2, 'Frauda G', 91.59, '2026-12-12', 'Frauda Infantil', 50, 7, null), (3, 'Creatina 
+Super Bom 300g', 89.90, '2025-11-28', 'Suplemento para treino e tratamentos', 10, 5, null), (4, 'Dorflex', 18.99, '2026-12-12', 'Recomendado para dor de 
+cabeça e muscular.', 15, 1, null), (5, 'Óculos de Sol TH', 91.59, null, 'Acessorio com proteção contra os raios UV.', 12, 3, null), (6, 'Hidratante Facial', 64.50, 
+'2026-01-22', 'Hidratante com sensação seca para o rosto.', 17, 2, null), (7, 'Invermectina', 59.90, '2025-14-15', 'Recomendados para tratamentos especificos', 
+20, 1, 1), (8, 'Metronidazol', 17.90, '2027-01-06', 'Recomendados para tratamentos especificos', 7, 1, 2);
+
+insert into produto_fornecedor (id_produto, id_fornecedor) values (2, 5), (7, 2), (5, 3), (4, 6), (1, 4), (6, 1);
+
+insert into venda (id_venda, data_da_venda, id_balconista, id_cliente, id_item) values (1, '2024-11-04', 3, 2, 4), (2, '2024-10-22', 3, 4, 2), 
+(3, '2024-10-18', 1, 6, 3), (4, '2024-10-10', 4, 2, 1), (5, '2024-09-29', 2, 5, 4), (6, '2024-09-27', 2, 3, 5), (7, '2024-09-25', 2, 1, 1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
