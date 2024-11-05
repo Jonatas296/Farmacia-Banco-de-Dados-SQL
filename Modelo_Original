@@ -1,5 +1,5 @@
-/* Lógico_2: */
 create database FarmaciaDenises;
+
 CREATE TABLE Balconista (
     id_balconista int PRIMARY KEY auto_increment,
     nome VARCHAR(100),
