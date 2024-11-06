@@ -115,7 +115,7 @@ inner join produto p on p.id_produto = i.id_produto;
 select p.nome, cat.nome from produto p inner join categoria cat on p.id_categoria = cat.id_categoria;
 select p.nome, cat.nome from produto p inner join categoria cat on p.id_categoria = cat.id_categoria where p.nome = 'Dipirona Monoidratado';
 select p.nome, f.nome from produto p inner join fornecedor f on p.id_fornecedor = f.id_fornecedor where f.nome = 'CEQUIQ REMEDIOS LTDA';
-select p.nome, f.nome from produto p inner join fornecedor f on p.id_fornecedor = f.id_fornecedor where f.nome = 'CEQUIQ REMEDIOS LTDA';
+select p.nome, f.nome from produto p inner join fornecedor f on p.id_fornecedor = f.id_fornecedor where f.nome = 'Natura';
 select nome, salario, salario + 200 as 'Bonificação de Natal' from balconista;
 select nome, data_nascimento from cliente where data_nascimento between '1990-01-01' and '2010-12-31';
 select nome, data_nascimento from cliente where data_nascimento not between '1990-01-01' and '2010-12-31';
