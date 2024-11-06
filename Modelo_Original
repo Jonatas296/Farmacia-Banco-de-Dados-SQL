@@ -2,15 +2,15 @@ create database FarmaciaDenises;
 
 CREATE TABLE Balconista (
     id_balconista int PRIMARY KEY auto_increment,
-    nome VARCHAR(100),
+    nome varchar(100) not null,
     endereco VARCHAR(200),
-    telefone char(11),
+    telefone char(11) not null,
     salario float
 );
 
 CREATE TABLE Categoria (
     id_categoria int PRIMARY KEY auto_increment,
-    nome VARCHAR(100)
+    nome varchar(100) not null
 );
 
 CREATE TABLE Receita (
@@ -31,13 +31,17 @@ CREATE TABLE Produto (
     quantidade float,
     id_categoria int,
     id_receita int,
+    id_fornecedor int,
     constraint fk_categoria_p foreign key (id_categoria) references categoria (id_categoria) on delete set null on update cascade,
-    constraint fk_receita_p foreign key (id_receita) references receita (id_receita) on delete set null on update cascade
+    constraint fk_receita_p foreign key (id_receita) references receita (id_receita) on delete set null on update cascade,
+    constraint fk_fornecedor_p foreign key (id_fornecedor) references fornecedor (id_fornecedor) on delete set null on update cascade
 );
 
 CREATE TABLE Item (
     id_item int PRIMARY KEY auto_increment,
-    quantidade int
+    quantidade int,
+    id_produto int,
+    constraint fk_produto_i foreign key (id_produto) references produto (id_produto) on delete set null on update cascade
 );
 
 CREATE TABLE Cliente (
@@ -68,13 +72,6 @@ CREATE TABLE Fornecedor (
     endereco VARCHAR(200)
 );
 
-CREATE TABLE Produto_Fornecedor (
-    id_produto int,
-    id_fornecedor int,
-    constraint fk_produto_pf foreign key (id_produto) references produto (id_produto) on update cascade,
-    constraint fk_fornecedor foreign key (id_fornecedor) references fornecedor (id_fornecedor) on update cascade,
-    PRIMARY KEY (id_produto, id_fornecedor)
-);
 
 insert into balconista (id_balconista, nome, endereco, telefone, salario) values (1, 'João Silva', 'Rua das Flores, 123', 
 '88987654321', 1412.00), (2, 'Maria Santos', 'Av. Central, 456', '88912345678', 1412.00), (3, 'Carlos Oliveira', 
@@ -95,36 +92,35 @@ Samuel, 292, Fortaleza'), (2, '45698745987456', 'Laboratorio SLA', '88987674871'
 'Av Boa Vista, 202, Iguatu'), (5, '75984569874215', 'Integral Medica', '88787654321', 'Rua Tuncas, 1010, Fortaleza'), (6, '85697511985575', 'YSY 
 Acessorios', '88987658378', 'Al Joao Candido, 3030, Fortaleza');
 
-insert into item (id_item, quantidade) values (1, 4), (2, 3.5), (3, 5), (4, 1.5), (5, 6);
+insert into item (id_item, quantidade, id_produto) values (1, 4, 3), (2, 3.5, 1), (3, 5, 1), (4, 1.5, 1), (5, 6, 4);
 
 insert into receita (id_receita, nome_medicamento, descricao, data_prescricao, nome_paciente, crm_or_crf) values (1, 'Invermectina', 'Tomar a cada
 seis horas por 15 dias', '2024-11-03', 'José Carvalho de Lima', '7859462654869848'), (2, 'Metronidazol', 'Tomar de dois em dois dias por 20 dias', 
 '2024-10-25', 'Maria Angelica Pereira', '4859415648869848'); 
 
-insert into produto (id_produto, nome, preco, validade, descricao, quantidade, id_categoria, id_receita) values (1, 'Dipirona Monoidratado', 12.50, 
-'2025-08-14', 'Recomendados para febre e dor de cabeça', 20.00, 1, null), (2, 'Frauda G', 91.59, '2026-12-12', 'Frauda Infantil', 50, 7, null), (3, 'Creatina 
-Super Bom 300g', 89.90, '2025-11-28', 'Suplemento para treino e tratamentos', 10, 5, null), (4, 'Dorflex', 18.99, '2026-12-12', 'Recomendado para dor de 
-cabeça e muscular.', 15, 1, null), (5, 'Óculos de Sol TH', 91.59, null, 'Acessorio com proteção contra os raios UV.', 12, 3, null), (6, 'Hidratante Facial', 64.50, 
-'2026-01-22', 'Hidratante com sensação seca para o rosto.', 17, 2, null), (7, 'Invermectina', 59.90, '2025-14-15', 'Recomendados para tratamentos especificos', 
-20, 1, 1), (8, 'Metronidazol', 17.90, '2027-01-06', 'Recomendados para tratamentos especificos', 7, 1, 2);
-
-insert into produto_fornecedor (id_produto, id_fornecedor) values (2, 5), (7, 2), (5, 3), (4, 6), (1, 4), (6, 1);
+insert into produto (id_produto, nome, preco, validade, descricao, quantidade, id_categoria, id_receita, id_fornecedor) values (1, 'Dipirona Monoidratado', 12.50, 
+'2025-08-14', 'Recomendados para febre e dor de cabeça', 20.00, 1, null, 1), (2, 'Frauda G', 91.59, '2026-12-12', 'Frauda Infantil', 50, 7, null, 4), (3, 'Creatina 
+Super Bom 300g', 89.90, '2025-11-28', 'Suplemento para treino e tratamentos', 10, 5, null, 5), (4, 'Dorflex', 18.99, '2026-12-12', 'Recomendado para dor de 
+cabeça e muscular.', 15, 1, null, 1), (5, 'Óculos de Sol TH', 91.59, null, 'Acessorio com proteção contra os raios UV.', 12, 3, null, 6), (6, 'Hidratante Facial', 64.50, 
+'2026-01-22', 'Hidratante com sensação seca para o rosto.', 17, 2, null, 3), (7, 'Invermectina', 59.90, '2025-14-15', 'Recomendados para tratamentos especificos', 
+20, 1, 1, 1), (8, 'Metronidazol', 17.90, '2027-01-06', 'Recomendados para tratamentos especificos', 7, 1, 2, 2);
 
 insert into venda (id_venda, data_da_venda, id_balconista, id_cliente, id_item) values (1, '2024-11-04', 3, 2, 4), (2, '2024-10-22', 3, 4, 2), 
 (3, '2024-10-18', 1, 6, 3), (4, '2024-10-10', 4, 2, 1), (5, '2024-09-29', 2, 5, 4), (6, '2024-09-27', 2, 3, 5), (7, '2024-09-25', 2, 1, 1);
 
 
+select b.nome, v.id_venda, v.data_da_venda from balconista b inner join venda v on b.id_balconista = v.id_balconista;
+select c.nome, v.data_da_venda, i.quantidade, p.nome from cliente c inner join venda v on c.id_cliente = v.id_cliente inner join item i on i.id_item = v.id_item  
+inner join produto p on p.id_produto = i.id_produto;
+select p.nome, cat.nome from produto p inner join categoria cat on p.id_categoria = cat.id_categoria;
+select p.nome, cat.nome from produto p inner join categoria cat on p.id_categoria = cat.id_categoria where p.nome = 'Dipirona Monoidratado';
+select p.nome, f.nome from produto p inner join fornecedor f on p.id_fornecedor = f.id_fornecedor where f.nome = 'CEQUIQ REMEDIOS LTDA';
+select p.nome, f.nome from produto p inner join fornecedor f on p.id_fornecedor = f.id_fornecedor where f.nome = 'CEQUIQ REMEDIOS LTDA';
+select nome, salario, salario + 200 as 'Bonificação de Natal' from balconista;
+select nome, data_nascimento from cliente where data_nascimento between '1990-01-01' and '2010-12-31';
+select nome, data_nascimento from cliente where data_nascimento not between '1990-01-01' and '2010-12-31';
+select nome from cliente where nome like 'A%';
+select p.nome from produto p order by p.nome asc;
+select sum(preco) as 'Valor Total' from produto; 
+select p.nome, r.id_receita  from produto p inner join receita r on p.id_receita = r.id_receita order by p.nome;
 
-
-
-
-
-
-
-
-
-
-
-
-
- 
